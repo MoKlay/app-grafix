@@ -1,0 +1,118 @@
+:root{
+  --color-btn: white;
+  --color-shadow: black;
+}
+
+
+.btnTool{
+  user-select: none;
+  cursor: pointer;
+  transition: all.2s ease-in-out;
+  border: 0;
+  outline: 0;
+  background: var(--color-btn);
+  box-shadow: 0 2px 4px black;
+  border-radius: 15px;
+  display: flex;
+  gap: 10px;
+  text-wrap: nowrap;
+  align-items: center;
+  border: 1px solid var(--color-btn);
+  padding: 5px;
+  justify-content: center;
+}
+.btnTool:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 5px 0 var(--color-shadow);
+  border: 1px solid var(--color-shadow);
+}
+.btnTool:active{
+  transition: all.1s ease-in-out;
+  transform: translateY(0px);
+  box-shadow: 0 0 0 var(--color-shadow);
+}
+.btnTool.text{
+  padding: 5px 15px;
+}
+.btnTool[data-tooltitle]::after{
+  pointer-events: none;
+  content: attr(data-tooltitle);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  visibility: hidden;
+  opacity: 0;
+  transition: all.3s ease-in-out;
+  transform: translateX(-50%) translateY(-50%);
+  display: block;
+  padding: 5px 10px;
+  border-radius:5px;
+  box-shadow: 0 0 4px var(--color-shadow);
+  color: black;
+
+}
+.btnTool[data-tooltitle]:hover::after{
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-160%);
+}
+.btnTool svg{
+  display: block;
+  width: 25px;
+  height: 25px;
+}
+:where(.btnTool, .list-btn ).active{
+  border-color: green;
+  background: green;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 4px var(--color-shadow);
+}
+.list-btn__list{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  visibility: hidden;
+  opacity: 0;
+  top: 0;
+  gap: 10px;
+  transition: all.3s ease-in-out;
+}
+.list-btn__list.open{
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(calc(-100% - 10px));
+}
+.active_vector {
+  background: yellow;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 4px black;
+}
+.not_active_vector svg{
+  animation: rotate1 0.5s ease-in-out reverse;
+}
+@keyframes rotate1 {
+  0% {
+    transform: rotate(45deg) scale(0.8);
+  }
+  50% {
+    transform: rotate(225deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(405deg) scale(0.8);
+  }
+}
+.active_vector svg{
+  animation: rotate2 0.5s ease-in-out;
+}
+@keyframes rotate2 {
+  0% {
+    transform: rotate(45deg) scale(0.8);
+  }
+  50% {
+    transform: rotate(225deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(405deg) scale(0.8);
+  }
+}
