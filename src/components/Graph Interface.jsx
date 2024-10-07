@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { MarkerConections } from "../elements/Connection";
-import Top from "../elements/Top";
+import { MarkerConections } from "./elements/Connection";
+import Top from "./elements/Top";
 
 export default function GraphInterface({
   tops,

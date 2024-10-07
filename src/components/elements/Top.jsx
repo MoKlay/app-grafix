@@ -1,5 +1,8 @@
 import React from "react";
-
+export const TopObject = {
+  text: "",
+  object: null
+}
 export default function Top({ value, x, y, radius, bgColor = 'black', color = "black", onMouseDown }) {
   return (
     <>

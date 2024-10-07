@@ -1,53 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./css/index.css";
 import ToolBar, { EVENT } from "./components/ToolBar";
-import Input from "./elements/Input";
+import Input from "./components/elements/Input";
 import GraphInterface from "./components/Graph Interface";
+import { TopObject } from "./components/elements/Top";
 
 function App() {
   const [toolType, setToolType] = useState(EVENT.CURSOR);
   const [createToTap, setCreateToTap] = useState(false);
   const [isVector, setIsVector] = useState(false);
-  const [tops, setTops] = useState(null);
+  const [tops, setTops] = useState(TopObject);
   const [connections, setConnections] = useState(null);
+
+  useEffect(() => {
+    let prev = tops
+    if (prev && prev.object && prev.text === '') {
+      Object.keys(prev.object).forEach(value => prev.text += value + ',')
+      prev.text.slice(0, -1)
+      setTops(prev)
+    }
+  }, [tops])
 
   function handleClickCreateTop(e) {
     if (createToTap) {
       const name = prompt("Укажите имя для новой вершины");
-      if (name && !tops) {
-        setTops({
-          object: {
-            [name]: {
-              x: e.clientX,
-              y: e.clientY,
-              color: '#' + Math.floor(Math.random()*16777215).toString(16),
-            },
-          },
-          text: name,
-        });
-      } else if (name && tops) {
-        setTops((prevtops) => {
-          const object ={
-            
-            [name]: {
-              x: e.clientX,
-              y: e.clientY,
-              color: "#" + Math.floor(Math.random() * 16777215).toString(16),
-            },...prevtops.object,
-          }
-          let text = ''
-          Object.keys(object).forEach((key) => {
-            text += key + ",";
-          })
-          
-          text = text.slice(0, -1);
-          
-          return ({
-          text,
-          object
-        })});
-      }
+      name && setTops(prev => {
+        prev.text = ''
+        prev.object = {
+          [name]:{
+            x: e.clientX,
+            y: e.clientY,
+            color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+          }, ...prev.object
+        }
+        return prev
+      });
     }
   }
 
@@ -56,28 +44,24 @@ function App() {
       <Input
         event={toolType}
         onSubmit={(obj) => {
-          if (toolType === EVENT.ADD_TOP) {
-            setTops(obj);
-          }
+          toolType === EVENT.ADD_TOP && setTops(obj);
           setToolType(EVENT.CURSOR);
         }}
         onClick={(flag) => setCreateToTap(flag)}
-        val={
-          (toolType === EVENT.ADD_TOP && tops && tops.text) ||
-          (toolType === EVENT.ADD_CONNECTION &&
-            connections &&
-            connections.text) ||
-          ""
+        obj={
+          (toolType === EVENT.ADD_TOP && tops) 
+          ||
+          (toolType === EVENT.ADD_CONNECTION && connections)
         }
         isEdit={createToTap}
       />
       <ToolBar
         event={toolType}
-        setEvent={(value, isEvent) => {
-          if (isEvent) {
+        setEvent={(value) => {
+          if (typeof value === 'string' && (value === EVENT.ADD_TOP || value === EVENT.ADD_CONNECTION)) {
             setToolType(value);
-            value === EVENT.ADD_TOP && setCreateToTap(true);
-          } else setIsVector(value);
+            setCreateToTap(true);
+          } else if (typeof value === 'boolean') setIsVector(value);
         }}
       />
       <GraphInterface
