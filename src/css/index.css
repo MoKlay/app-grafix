@@ -12,8 +12,8 @@ body{
   flex-direction: column;
   align-items: center;
 }
-@import url(./css\ elements/Input.css);
 @import url(./ToolBar.css);
 @import url(./css\ elements/Button.css);
-@import url(./Graph\ Interface.css)
+@import url(./Graph\ Interface.css);
+@import url(./PanelInfo.css);
 

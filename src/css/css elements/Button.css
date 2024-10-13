@@ -21,12 +21,12 @@
   padding: 5px;
   justify-content: center;
 }
-.btnTool:hover{
+.btnTool:hover, .btnTool.active:hover{
   transform: translateY(-5px);
   box-shadow: 0 5px 0 var(--color-shadow);
   border: 1px solid var(--color-shadow);
 }
-.btnTool:active{
+.btnTool:active, .btnTool.active:active{
   transition: all.1s ease-in-out;
   transform: translateY(0px);
   box-shadow: 0 0 0 var(--color-shadow);
@@ -61,7 +61,7 @@
   width: 25px;
   height: 25px;
 }
-:where(.btnTool, .list-btn ).active{
+.btnTool.active, .list-btn:has(.btnTool.active)>.btnTool{
   border-color: green;
   background: green;
   color: white;
@@ -78,6 +78,7 @@
   gap: 10px;
   transition: all.3s ease-in-out;
 }
+
 .list-btn__list.open{
   visibility: visible;
   opacity: 1;

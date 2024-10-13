@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 export const ICONS = {
   add: (
-    <svg fill="currentColor" viewBox="0 0 16 16" style={{transform: 'scale(1.2)'}}>
+    <svg fill="currentColor" viewBox="0 0 16 16" style={{ transform: 'scale(1.2)' }}>
       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
     </svg>
   ),
@@ -17,7 +17,7 @@ export const ICONS = {
     <svg
       fill="currentColor"
       viewBox="0 0 16 16"
-      style={{transform: 'rotate(45deg) scale(0.8)'}}
+      style={{ transform: 'rotate(45deg) scale(0.8)' }}
     >
       <path
         fill-rule="evenodd"
@@ -25,6 +25,12 @@ export const ICONS = {
       />
     </svg>
   ),
+  arrow: (
+    <svg fill="currentColor" viewBox="0 0 16 16">
+      <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z" />
+    </svg>
+  )
+
 };
 export function ListButton({ icon, children, title }) {
   const [openList, setOpenList] = useState(false);

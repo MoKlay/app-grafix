@@ -1,0 +1,25 @@
+.PanelInfo{
+  width: 400px;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3;
+  transition: all.3s ease-in-out;
+  box-shadow: inset -5px 0 50px 10px black;
+}
+.PanelInfo .PanelInfo__btn{
+  position: absolute;
+  right: 0;
+  transform: translate(calc(100% + 20px), 20px);
+}
+.PanelInfo .open svg{
+  transform: rotate(180deg);
+}
+.PanelInfo .PanelInfo__content {
+  color: white;
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+}

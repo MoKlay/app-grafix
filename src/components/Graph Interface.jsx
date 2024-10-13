@@ -7,6 +7,7 @@ export default function GraphInterface({
   connections,
   onMouseMove,
   onClick,
+  onClickTop,
 }) {
   const [isDragging, setIsDragging] = useState(null);
 
@@ -21,8 +22,8 @@ export default function GraphInterface({
     >
       <MarkerConections />
       {tops &&
-        Object.entries(tops).map(([value, top]) => {
-          return (
+        Object.entries(tops.object).map(([value, top]) => {
+          if (top) return (
             <Top
               key={value}
               x={top.x}
@@ -30,8 +31,10 @@ export default function GraphInterface({
               value={value}
               radius={12}
               onMouseDown={() => setIsDragging(value)}
+              onClick={() => onClickTop(value)}
             />
           );
+          return null
         })}
     </svg>
   );
