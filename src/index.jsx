@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , StrictMode} from "react";
 import ReactDOM from "react-dom/client";
 import "./css/index.css";
 import ToolBar, { EVENT } from "./components/ToolBar";
@@ -6,12 +6,14 @@ import ToolBar, { EVENT } from "./components/ToolBar";
 import GraphInterface from "./components/Graph Interface";
 import { TopObject } from "./components/elements/Top";
 import PanelInfo from "./components/elements/PanelInfo";
+import { ConnectObject } from "./components/elements/Connection";
+import $ from 'jquery'
 
 function App() {
   const [toolType, setToolType] = useState(EVENT.CURSOR);
   const [isVector, setIsVector] = useState(false);
   const [tops, setTops] = useState(TopObject);
-  const [connections, setConnections] = useState(null);
+  const [connections, setConnections] = useState(ConnectObject);
 
   useEffect(() => {
     tops.text === '' && setTops(prev => {
@@ -25,6 +27,16 @@ function App() {
       };
     });
   }, [tops.object])
+
+  useEffect(() => {
+    connections.text === '' && setConnections(prev => {
+      let text = JSON.stringify(prev.mass).replace(/\[/g, '(').replace(/\]/g, ')').slice(1, -1)
+      return {
+        ...prev,
+        text
+      }
+    })
+  }, [connections])
 
   function handleClickCreateTop(e) {
     toolType === EVENT.ADD_TOP && setTops(prev => ({
@@ -65,7 +77,9 @@ function App() {
       />
       <PanelInfo tops={tops} connections={connections}/>
       <GraphInterface
+        event={toolType}
         tops={tops}
+        connections={connections}
         onMouseMove={(e, top) => {
           toolType === EVENT.CURSOR && setTops((prevtops) => ({ ...prevtops, object:  { 
             ...tops.object, [top]: {
@@ -77,6 +91,11 @@ function App() {
         }}
         onClick={handleClickCreateTop}
         onClickTop={handleClickDeleteTop}
+        getConnect={connect => setConnections(prev => ({
+          text: '',
+          mass: [...prev.mass, connect],
+          connects: []
+        }))}
       />
       
     </>
@@ -84,4 +103,6 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(<StrictMode>
+  <App/>
+</StrictMode>);
