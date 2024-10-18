@@ -2,12 +2,10 @@ import React, { useEffect, useState , StrictMode} from "react";
 import ReactDOM from "react-dom/client";
 import "./css/index.css";
 import ToolBar, { EVENT } from "./components/ToolBar";
-// import Input from "./components/elements/Input";
 import GraphInterface from "./components/Graph Interface";
 import { TopObject } from "./components/elements/Top";
 import PanelInfo from "./components/elements/PanelInfo";
 import { ConnectObject } from "./components/elements/Connection";
-import $ from 'jquery'
 
 function App() {
   const [toolType, setToolType] = useState(EVENT.CURSOR);
@@ -26,7 +24,7 @@ function App() {
         object: prev.object
       };
     });
-  }, [tops.object])
+  }, [tops])
 
   useEffect(() => {
     connections.text === '' && setConnections(prev => {

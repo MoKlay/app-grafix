@@ -16,12 +16,12 @@ export default function GraphInterface({
   const [connect, setConnect] = useState([])
 
   useEffect(() => {
-    console.log(connect);
-    if (connect.length == 2) {
+    if (connect.length === 2) {
       getConnect && getConnect(connect)
       setConnect([])
-    }
-  }, [connect])
+    } else if (event !== EVENT.ADD_CONNECTION) setConnect([])
+
+  }, [connect, getConnect, event])
 
   return (
     <svg
@@ -42,6 +42,14 @@ export default function GraphInterface({
     >
       <MarkerConections id="connect" refX={5}/>
       <MarkerConections />
+      {connections && connections.mass.map((el, i) => (
+          <Connection
+            key={`connect-${i}`} 
+            type={el[0] !== el[1] ? 'line' : 'loop'}
+            top1={tops.object[el[0]]}
+            top2={tops.object[el[1]]} 
+          />
+        ))}
       {tops &&
         Object.entries(tops.object).map(([value, top]) => {
           if (top) return (
@@ -51,6 +59,7 @@ export default function GraphInterface({
               y={top.y}
               value={value}
               radius={12}
+              color={connect.includes(parseInt(value)) && event === EVENT.ADD_CONNECTION ? top.color : 'black'}
               onMouseDown={e => {
                 switch (event) {
                   case EVENT.CURSOR: setIsDragging(value); break;
@@ -60,7 +69,7 @@ export default function GraphInterface({
               onClick={() => {
                 switch (event) {
                   case EVENT.DELETE_TOP: onClickTop(value); break;
-                  case EVENT.ADD_CONNECTION: setConnect(prev => ([...prev, parseInt(value)]))
+                  case EVENT.ADD_CONNECTION: setConnect(prev => ([...prev, parseInt(value)])); break;
                   default: break;
                 }
               }}
@@ -73,14 +82,7 @@ export default function GraphInterface({
           );
           return null
         })}
-        {connections && connections.mass.map((el, i) => (
-          <Connection
-            key={`connect-${i}`} 
-            type={el[0] !== el[1] ? 'line' : 'loop'}
-            top1={tops.object[el[0]]}
-            top2={tops.object[el[1]]} 
-          />
-        ))}
+        
     </svg>
   );
 }

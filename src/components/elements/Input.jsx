@@ -24,8 +24,7 @@ export default function Input({ event, onClick, onSubmit, isEdit = false, obj = 
         setTimeout(() => onClick(false), 300)
         break
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event])
+  }, [event, onClick])
 
   function handleSubmit(e) {
     e.preventDefault()
