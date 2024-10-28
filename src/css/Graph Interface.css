@@ -6,3 +6,7 @@
   filter: drop-shadow(0 2px 1px green);
   z-index: 1;
 }
+
+svg circle{
+  transition: fill 0.2s ease-in-out;
+}
