@@ -1,0 +1,54 @@
+.matrix {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  margin: 30px;
+  color: white;
+}
+.matrix div {
+  display: flex;
+  justify-content: space-between;
+}
+.matrix p {
+  cursor: default;
+  user-select: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all.3s ease-in-out;
+  box-shadow: 0 0 4px black;
+  margin: 2px;
+}
+
+.matrix span:hover::before {
+  cursor: none;
+  user-select: none;
+  pointer-events: none;
+  content: attr(data-i);
+  display: block;
+  position: absolute;
+  left: 0;
+  transform: translateX(-100%);
+  padding: 5px;
+  text-shadow: 0 0 2px black;
+}
+.matrix span:hover::after {
+  cursor: none;
+  user-select: none;
+  pointer-events: none;
+  content: attr(data-j);
+  display: block;
+  position: absolute;
+  top: 0;
+  transform: translateY(-100%);
+  padding: 5px;
+  text-shadow: 0 0 2px black;
+}
+.matrix p:hover{
+  box-shadow: 0 0 4px 2px black;
+
+}

@@ -1,28 +1,34 @@
-.PanelInfo{
-  width: 400px;
-  height: 100vh;
+:root {
+  --w-panel: 400px;
+}
+.Panel{
   position: absolute;
-  left: 0;
   top: 0;
   z-index: 3;
   transition: all.3s ease-in-out;
+}
+
+.PanelInfo{
+  width: var(--w-panel);
+  height: 100vh;
+  
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.PanelInfo .PanelInfo__btn{
+.Panel .PanelInfo__btn{
   position: absolute;
-  right: 0;
-  top: 0;
-  transform: translate(calc(100% + 20px), 20px);
-  
+  top: 20px;
 }
-.PanelInfo svg{
+.Panel svg{
   transition: transform 0.3s ease-in-out;
 }
-.PanelInfo .open svg{
+.Panel .openRight svg{
   transform: rotate(180deg);
+}
+.Panel .openLeft svg{
+  transform: rotate(-180deg);
 }
 .PanelInfo .PanelInfo__content {
   width: calc(100% - 40px);
@@ -44,6 +50,5 @@
   padding: 20px;
 }
 .PanelInfo .PanelInfo__content p{
-  display: block;
   text-wrap: wrap;
 }

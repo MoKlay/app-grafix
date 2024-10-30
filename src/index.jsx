@@ -1,18 +1,24 @@
-import React, { StrictMode} from "react";
+import React, { StrictMode, useMemo} from "react";
 import ReactDOM from "react-dom/client";
 import "./css/index.css";
 import ToolBar, { useCreateEventState } from "./components/ToolBar";
-import GraphInterface, { useCreateGraff } from "./components/Graph Interface";
+import GraphInterface, { useCreateGraf } from "./components/Graph Interface";
 import PanelInfo from "./components/elements/PanelInfo";
+import Matrix from "./components/elements/Matrix";
 
 function App() {
   const [event, setEvent] = useCreateEventState()
-  const [obj, setObj] = useCreateGraff()
+  const [obj, setObj] = useCreateGraf(
+    useMemo(() => event, [event])
+  )
 
   return (
     <>
       <ToolBar event={event} setEvent={setEvent}/>
       <PanelInfo obj={obj} event={event}/>
+      <PanelInfo custom pos="right" >
+        <Matrix obj={obj}/>
+      </PanelInfo>
       <GraphInterface
         event={event}
         obj={obj}
@@ -27,3 +33,4 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<StrictMode>
   <App/>
 </StrictMode>);
+

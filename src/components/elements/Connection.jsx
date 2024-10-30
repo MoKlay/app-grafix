@@ -1,3 +1,4 @@
+
 import React, { useMemo, useRef, useState } from 'react'
 
 
@@ -5,14 +6,26 @@ export function useCreateConnections() {
   const [connections, setConnections] = useState(ConnectObject);
 
   function update(mass) {
-    setConnections({
+    if (Array.isArray(mass)) setConnections({
       text: JSON.stringify([...connections.mass, mass]).slice(1, -1).replaceAll('[', '(').replaceAll(']', ')').replaceAll('"', ''),
       mass: [
         ...connections.mass,
         mass
       ],
-      connects: []
+      connects: [],
+      length: connections.mass.length + 1
+
     })
+    else if (typeof mass === 'function') {
+      const masslocal = mass(connections.mass)
+
+      setConnections({
+        text: JSON.stringify(masslocal).slice(1, -1).replaceAll('[', '(').replaceAll(']', ')').replaceAll('"', ''),
+        mass: masslocal,
+        connects: [],
+        length: masslocal.length + 1
+      })
+    }
   }
 
   return [connections, update]
@@ -23,10 +36,11 @@ export function useCreateConnections() {
 export const ConnectObject = {
   text: "",
   mass: [],
-  connects: []
+  connects: [],
+  length: 0
 }
 
-export function MarkerConections({ id = "arrow", refX = 15, markerHeight = 10, markerWidth = 10, color = 'black' }) {
+export function MarkerConnections({ id = "arrow", refX = 15, markerHeight = 10, markerWidth = 10, color = 'black' }) {
   return (
     <defs>
       <marker id={id} markerWidth={markerWidth} markerHeight={markerHeight} refX={refX} refY={markerHeight / 2} orient="auto">
@@ -36,7 +50,7 @@ export function MarkerConections({ id = "arrow", refX = 15, markerHeight = 10, m
   )
 }
 
-export default function Connection({ value, type = 'line', top1, top2, market, color = 'black' }) {
+export default function Connection({ value, type = 'line', top1, top2, market, color = 'black', onClick}) {
 
   const state = useRef({
     x1: Math.random() * 500 - 250,
@@ -63,14 +77,24 @@ export default function Connection({ value, type = 'line', top1, top2, market, c
       />
       break;
     default:
-      typeElement.current = <line x1={top1.x} y1={top1.y} x2={top2.x} y2={top2.y} markerEnd={market && `url(#${market})`} stroke={color} strokeWidth="2" />
+    
+      typeElement.current = <line x1={top1.x} y1={top1.y} x2={top2.x} y2={top2.y} markerEnd={market && `url(#${market})`} stroke={color} strokeWidth="2">
+        <animateTransform attributeName='transform' type='rotate' from={`0 ${top1.x} ${top1.y}`} to={`360 ${top1.x} ${top1.y}`} dur="1s" />
+
+      </line>
       break;
   }
   return (
-    <>
-      {value && <text x={Math.abs(top1.x - top2.x) / 2} y={Math.abs(top1.y - top2.y) / 2 + 3}>{value}</text>}
+    <g onClick={onClick}>
+      {value && <text 
+      x={Math.abs(top1.x - top2.x) / 2 + Math.min(top1.x, top2.x)  -15} 
+      y={Math.abs(top1.y - top2.y) / 2 + Math.min(top1.y, top2.y)  -15}
+      textAnchor="middle" dominantBaseline="middle"
+      >
+        {value}
+        </text>}
       {typeElement.current}
-    </>
+    </g>
   )
 
 }

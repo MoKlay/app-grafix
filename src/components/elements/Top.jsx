@@ -7,7 +7,9 @@ export function useCreateTops() {
     setTops({
       text: Object.keys(tops).join(', '),
       mass: Object.keys(tops),
-      tops
+      tops,
+      length: Object.keys(tops).length
+
     })
   }
 
@@ -17,7 +19,8 @@ export function useCreateTops() {
 export const TopObject = {
   text: "",
   mass: [],
-  tops: {}
+  tops: {},
+  length: 0
 }
 
 export default function Top({ value, x, y, radius, bgColor = 'black', color = "black", onMouseDown, onClick, onMouseUp}) {
