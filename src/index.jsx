@@ -8,9 +8,8 @@ import Matrix from "./components/elements/Matrix";
 
 function App() {
   const [event, setEvent] = useCreateEventState()
-  const [obj, setObj] = useCreateGraf(
-    useMemo(() => event, [event])
-  )
+  const [obj, setObj] = useCreateGraf(event)
+  
 
   return (
     <>

@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from 'react'
 
 export function useGenerateMatrix(obj, event) {
-  const [adjacencies, setAdjacencies] = useState([])
-  const [incidents, setIncidents] = useState([])
+  const [Matrix, updateMatrix] = useState({
+    adjacencies: [],
+    incidents: []
+  })
 
   useEffect(() => {
-    setAdjacencies(obj.tops.mass.map(el1 => {
-      return obj.tops.mass.map(el2 => {
-        const flagIsVector = !event.isVector && obj.connections.mass.filter(el => el[0] === el1 && el[1] === el2).length !== 0
-        const flag = obj.connections.mass.filter(el => el[1] === el1 && el[0] === el2).length !== 0
-        return (flag || flagIsVector) ? 1 : 0
+    updateMatrix({
+      adjacencies: obj.tops.mass.map(el1 => {
+        return obj.tops.mass.map(el2 => {
+          const flagIsVector = !event.isVector && obj.connections.mass.filter(el => el[0] === el1 && el[1] === el2).length !== 0
+          const flag = obj.connections.mass.filter(el => el[1] === el1 && el[0] === el2).length !== 0
+          return (flag || flagIsVector) ? 1 : 0
+        })
+      }),
+      incidents: obj.connections.mass.map(el1 => {
+        return obj.tops.mass.map(el2 => {
+          if (!event.isVector) return el1.includes(el2) ? 1 : 0
+          else {
+            if (el1[0] === el2) return "+1"
+            else if (el1[1] === el2) return "-1"
+            else return 0
+          }
+        })
       })
-    }))
-    setIncidents(obj.connections.mass.map(el1 => {
-      return obj.tops.mass.map(el2 => {
-        if (!event.isVector) return el1.includes(el2) ? 1 : 0
-        else {
-          if (el1[0] === el2) return "+1"
-          else if (el1[1] === el2) return "-1"
-          else return 0
-        }
-      })
-    }))
+    })
 
-  }, [obj, event])
+  }, [obj.connections, obj.tops , event.isVector])
 
-  return [adjacencies, incidents]
+  return Matrix
 
 }
 

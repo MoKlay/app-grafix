@@ -1,5 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 function useDepthTraversal(obj) {
- const [start, setStart] = useState(null)
+  const [way, setWay] = useState(null)
+
+  function traverse(start) {
+    
+  }
+
+  return [way, (value) => setWay([parseInt(value)])]
+  
 }

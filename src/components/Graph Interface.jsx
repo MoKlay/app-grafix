@@ -10,11 +10,7 @@ import { useGenerateMatrix } from "./elements/Matrix";
 export function useCreateGraf(event) {
   const [tops, setTops] = useCreateTops()
   const [connections, setConnections] = useCreateConnections()
-  const [adjacencies, incidents] = useGenerateMatrix(
-    useMemo(() => ({tops, connections}), [connections, tops]),
-    useMemo(() => (event), [event])
-  )
-
+  const matrix = useGenerateMatrix({tops, connections}, event)
   
 
   function update(type, value) {
@@ -25,7 +21,7 @@ export function useCreateGraf(event) {
     }
   }
 
-  return [{ tops, connections , adjacencies, incidents}, update]
+  return [{ tops, connections , ...matrix}, update]
 }
 
 function useTargetConnections(obj, setObj) {
