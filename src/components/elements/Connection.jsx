@@ -1,5 +1,6 @@
 
 import React, { useMemo, useRef, useState } from 'react'
+import Top from './Top';
 
 
 export function useCreateConnections() {
@@ -86,6 +87,12 @@ export default function Connection({ value, type = 'line', top1, top2, market, c
   }
   return (
     <g onClick={onClick}>
+      {
+        type === 'loop' && <>
+          <Top x={loopVector.x1} y={loopVector.y1} radius={5}/> 
+          <Top x={loopVector.x2} y={loopVector.y2} radius={5}/> 
+        </>
+      }
       {value && <text 
       x={Math.abs(top1.x - top2.x) / 2 + Math.min(top1.x, top2.x)  -15} 
       y={Math.abs(top1.y - top2.y) / 2 + Math.min(top1.y, top2.y)  -15}

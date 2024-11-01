@@ -1,4 +1,4 @@
-import React, { StrictMode, useMemo} from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./css/index.css";
 import ToolBar, { useCreateEventState } from "./components/ToolBar";
