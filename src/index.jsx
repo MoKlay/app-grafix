@@ -5,11 +5,15 @@ import ToolBar, { useCreateEventState } from "./components/ToolBar";
 import GraphInterface, { useCreateGraf } from "./components/Graph Interface";
 import PanelInfo from "./components/elements/PanelInfo";
 import Matrix from "./components/elements/Matrix";
+import { useDepthTraversal } from "./servise/DepthTraversal";
 
 function App() {
   const [event, setEvent] = useCreateEventState()
   const [obj, setObj] = useCreateGraf(event)
-  
+  const setStart = useDepthTraversal(obj.adjacencies)
+
+
+
 
   return (
     <>
@@ -22,6 +26,7 @@ function App() {
         event={event}
         obj={obj}
         setObj={setObj}
+        setStartTraversal={setStart}
       />
       
     </>

@@ -2,32 +2,43 @@ import React, { useEffect, useState } from 'react'
 
 export function useGenerateMatrix(obj, event) {
   const [Matrix, updateMatrix] = useState({
-    adjacencies: [],
-    incidents: []
+    adjacencies: {},
+    incidents: {}
   })
 
   useEffect(() => {
-    updateMatrix({
-      adjacencies: obj.tops.mass.map(el1 => {
-        return obj.tops.mass.map(el2 => {
-          const flagIsVector = !event.isVector && obj.connections.mass.filter(el => el[0] === el1 && el[1] === el2).length !== 0
-          const flag = obj.connections.mass.filter(el => el[1] === el1 && el[0] === el2).length !== 0
-          return (flag || flagIsVector) ? 1 : 0
-        })
-      }),
-      incidents: obj.connections.mass.map(el1 => {
-        return obj.tops.mass.map(el2 => {
-          if (!event.isVector) return el1.includes(el2) ? 1 : 0
-          else {
-            if (el1[0] === el2) return "+1"
-            else if (el1[1] === el2) return "-1"
-            else return 0
-          }
-        })
+    const matrix = {
+      adjacencies: {},
+      incidents: {}
+    }
+    obj.tops.mass.forEach(el1 => {
+      matrix.adjacencies[el1] = {}
+      
+
+      obj.tops.mass.forEach(el2 => {
+        const flagIsVector = obj.connections.mass.filter(el => el[0] === el1 && el[1] === el2).length !== 0
+        const flag = !event.isVector && obj.connections.mass.filter(el => el[1] === el1 && el[0] === el2).length !== 0
+
+        matrix.adjacencies[el1][el2] = (flag || flagIsVector) ? 1 : 0
       })
     })
 
-  }, [obj.connections, obj.tops , event.isVector])
+    obj.connections.mass.forEach((el1, i) => {
+      matrix.incidents['e' + (i + 1)] = {}
+
+      obj.tops.mass.forEach(el2 => {
+        if (!event.isVector) matrix.incidents['e' + (i + 1)][el2] = el1.includes(el2) ? 1 : 0
+          else {
+            if (el1[0] === el2) matrix.incidents['e' + (i + 1)][el2] = "+1"
+            else if (el1[1] === el2) matrix.incidents['e' + (i + 1)][el2] = "-1"
+            else matrix.incidents['e' + (i + 1)][el2] = 0
+          }
+      })
+
+    })
+    updateMatrix(matrix)
+
+  }, [obj.connections, obj.tops, event.isVector])
 
   return Matrix
 
@@ -45,10 +56,10 @@ export default function Matrix({ obj }) {
       alignItems: 'center',
     }}>
       <div className='matrix matrix-adjacencies' key={'matrix-adjacencies'}>
-        {obj.adjacencies.map((el, i) => (
+        {Object.entries(obj.adjacencies).map(([key, el], i) => (
           <div key={i} >{
-            el.map((p, j) => (
-              <span data-i={i + 1} data-j={j + 1} key={j}>
+            Object.entries(el).map(([key_p, p], j) => (
+              <span data-i={key} data-j={key_p} key={j}>
                 <p style={{
                   backgroundColor: p === 0 ? "red" : "green",
                 }}>{p}</p>
@@ -58,10 +69,10 @@ export default function Matrix({ obj }) {
         ))}
       </div>
       <div className='matrix matrix-incidents' key={'matrix-incidents'}>
-        {obj.incidents.map((el, i) => (
+        {Object.entries(obj.incidents).map(([key, el], i) => (
           <div key={i}>{
-            el.map((p, j) => (
-              <span key={j} data-i={'e' + (i + 1)} data-j={j + 1}>
+            Object.entries(el).map(([key_p, p], j) => (
+              <span key={j} data-i={key} data-j={key_p}>
                 <p style={{
                   backgroundColor: p === 0 ? "red" : "green"
                 }}>{p}</p>

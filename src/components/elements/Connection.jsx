@@ -41,7 +41,7 @@ export const ConnectObject = {
   length: 0
 }
 
-export function MarkerConnections({ id = "arrow", refX = 15, markerHeight = 10, markerWidth = 10, color = 'black' }) {
+export function MarkerConnections({ id = "arrow", refX = 16, markerHeight = 10, markerWidth = 10, color = 'black' }) {
   return (
     <defs>
       <marker id={id} markerWidth={markerWidth} markerHeight={markerHeight} refX={refX} refY={markerHeight / 2} orient="auto">

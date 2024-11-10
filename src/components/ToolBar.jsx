@@ -14,7 +14,7 @@ export function useCreateEventState() {
     }
   }
 
-  return [{toolType, isVector}, update]
+  return [{ toolType, isVector }, update]
 }
 
 export const EVENT = {
@@ -26,22 +26,20 @@ export const EVENT = {
   WIDTH_TRAVERSAL: 'WIDTH_TRAVERSAL',
 }
 
-export default function ToolBar({event ,setEvent}) {
+export default function ToolBar({ event, setEvent }) {
   if (!event || !setEvent) return null
 
   return (
     <div className='ToolBar'>
-      <Button className={[{active: event.toolType === EVENT.CURSOR}]} icon={ICONS.cursor} onClick={() => setEvent(EVENT.CURSOR)}/>
-      <ListButton icon={ICONS.add}>
-        <Button className={[{active: event.toolType === EVENT.ADD_TOP}]} icon={ICONS.add} onClick={() => setEvent(EVENT.ADD_TOP)}>Добавление вершин</Button>
-        <Button className={[{active: event.toolType === EVENT.ADD_CONNECTION}]} icon={ICONS.add} onClick={() => setEvent(EVENT.ADD_CONNECTION)}>{event.isVector ? 'Добавление дуг' : 'Добавление ребер'}</Button>
-        <Button className={[{active: event.toolType === EVENT.DELETE_TOP}]} icon={ICONS.add} onClick={() => setEvent(EVENT.DELETE_TOP)}>Удалить вершины</Button>
-      </ListButton>
+      <Button className={[{ active: event.toolType === EVENT.CURSOR }]} icon={ICONS.cursor} onClick={() => setEvent(EVENT.CURSOR)} />
+
+      <Button className={[{ active: event.toolType === EVENT.ADD_TOP }]} icon={ICONS.add} onClick={() => setEvent(EVENT.ADD_TOP)} />
+
       <ListButton icon={ICONS.service}>
-        <Button className={[{active: event.toolType === EVENT.DEPTH_TRAVERSAL}]} onClick={() => setEvent(EVENT.DEPTH_TRAVERSAL)}>Обход вершины по глубине</Button>
-        <Button className={[{active: event.toolType === EVENT.WIDTH_TRAVERSAL}]} onClick={() => setEvent(EVENT.WIDTH_TRAVERSAL)}>Обход вершины по глубине</Button>
+        <Button className={[{ active: event.toolType === EVENT.DEPTH_TRAVERSAL }]} onClick={() => setEvent(EVENT.DEPTH_TRAVERSAL)}>Обход вершины по глубине</Button>
+        <Button className={[{ active: event.toolType === EVENT.WIDTH_TRAVERSAL }]} onClick={() => setEvent(EVENT.WIDTH_TRAVERSAL)}>Обход вершины по глубине</Button>
       </ListButton>
-      <Button className={[{active_vector: event.isVector}, {not_active_vector: !event.isVector}]} icon={ICONS.vector} onClick={() => setEvent(!event.isVector)}></Button>
+      <Button className={[{ active_vector: event.isVector }, { not_active_vector: !event.isVector }]} icon={ICONS.vector} onClick={() => setEvent(!event.isVector)}></Button>
     </div>
   )
 }

@@ -9,6 +9,7 @@
 }
 
 .PanelInfo{
+  user-select: text;
   width: var(--w-panel);
   height: 100vh;
   

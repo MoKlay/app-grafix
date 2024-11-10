@@ -23,11 +23,15 @@ export const TopObject = {
   length: 0
 }
 
-export default function Top({ value, x, y, radius, bgColor = 'black', color = "black", onMouseDown, onClick, onMouseUp}) {
+export default function Top({ value, x, y, radius, bgColor = 'black', color = "black", onMouseDown, onClick, onMouseUp, onContextMenu, className}) {
   return (
-    <>
-      <circle cx={x} cy={y} r={radius} fill={bgColor} onMouseDown={onMouseDown} onClick={onClick} onMouseUp={onMouseUp}/>
+    <g className={className}>
+      <circle cx={x} cy={y} r={radius} fill={bgColor} onMouseDown={onMouseDown} onClick={onClick} onMouseUp={onMouseUp} onContextMenu={(e) => {
+        e.preventDefault()
+        
+        onContextMenu && onContextMenu(e)
+      }}/>
       <text x={x} y={y - radius - 5} fill={color} textAnchor="middle" dominantBaseline="middle">{value}</text>
-    </>
+    </g>
   );
 }

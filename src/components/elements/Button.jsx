@@ -42,12 +42,12 @@ export const ICONS = {
   )
 
 };
-export function ListButton({ icon, children, title }) {
+export function ListButton({ icon, children, title, customClass = false , className = []}) {
   const [openList, setOpenList] = useState(false);
   let timeout = null;
   return (
     <div
-      className="list-btn"
+      className={classNames({"list-btn": !customClass}, ...className)}
       onMouseLeave={(e) =>
         (timeout = setTimeout(() => setOpenList(false), 1000))
       }
@@ -56,7 +56,7 @@ export function ListButton({ icon, children, title }) {
       <div onClick={(e) => setOpenList(!openList)} className="btnTool">{icon}</div>
       {title && <p>{title}</p>}
       <div
-        className={classNames("list-btn__list", { open: openList })}
+        className={classNames({"list-btn__list": !customClass}, { open: openList })}
         style={{ position: "absolute" }}
       >
         {children}
@@ -71,10 +71,11 @@ export default function Button({
   className = [],
   description,
   children,
+  customClass = false
 }) {
   return (
     <button
-      className={classNames("btnTool", { text: children }, ...className)}
+      className={classNames({btnTool: !customClass}, { text: children }, ...className)}
       onClick={onClick}
       data-tooltitle={description}
     >

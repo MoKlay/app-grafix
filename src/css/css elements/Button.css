@@ -34,7 +34,7 @@
 .btnTool.text{
   padding: 5px 15px;
 }
-.btnTool[data-tooltitle]::after{
+button[data-tooltitle]::after{
   pointer-events: none;
   content: attr(data-tooltitle);
   position: absolute;
