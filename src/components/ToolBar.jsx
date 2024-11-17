@@ -35,10 +35,6 @@ export default function ToolBar({ event, setEvent }) {
 
       <Button className={[{ active: event.toolType === EVENT.ADD_TOP }]} icon={ICONS.add} onClick={() => setEvent(EVENT.ADD_TOP)} />
 
-      <ListButton icon={ICONS.service}>
-        <Button className={[{ active: event.toolType === EVENT.DEPTH_TRAVERSAL }]} onClick={() => setEvent(EVENT.DEPTH_TRAVERSAL)}>Обход вершины по глубине</Button>
-        <Button className={[{ active: event.toolType === EVENT.WIDTH_TRAVERSAL }]} onClick={() => setEvent(EVENT.WIDTH_TRAVERSAL)}>Обход вершины по глубине</Button>
-      </ListButton>
       <Button className={[{ active_vector: event.isVector }, { not_active_vector: !event.isVector }]} icon={ICONS.vector} onClick={() => setEvent(!event.isVector)}></Button>
     </div>
   )

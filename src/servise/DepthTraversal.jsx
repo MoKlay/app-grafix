@@ -1,63 +1,69 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 
-const dfs = (graph, startNode, visitedNodes = new Set()) => {
-  // Добавляем текущий узел в посещённые
-  visitedNodes.add(startNode);
-  console.log(Array.from(visitedNodes));
-  
-  
-  // Для каждого соседнего узла...
-  Object.entries(graph[startNode]).forEach(([key, el]) => {
-    if (el === 1 && !visitedNodes.has(key)) {
-      // Если узел ещё не был посещён, продолжаем DFS от него
-      dfs(graph, key, visitedNodes);
-      
+
+export function dfs(graph, startNode, node = [], nodes = []) {
+
+  nodes.push(startNode)
+
+  Object.keys(graph).length > 0 && Object.entries(graph[startNode]).forEach(([key, el]) => {
+    if (node.slice(-1)[0] !== startNode) node.push(startNode)
+    if (el === 1 && !nodes.includes(key)) {
+      dfs(graph, key, node, nodes);
     }
   });
 
-  return Array.from(visitedNodes); // Возвращаем массив посещённых узлов
+  if (node.slice(-1)[0] !== startNode) node.push(startNode)
+
+  return node
 };
 
 // Функция для обхода графа в ширину (BFS)
 const bfs = (graph, startNode) => {
   const queue = [startNode]; // Очередь для обработки узлов
   const visitedNodes = new Set(); // Множество посещённых узлов
+  const way = {}
 
   while (queue.length > 0) {
     const currentNode = queue.shift();
 
     if (!visitedNodes.has(currentNode)) {
       visitedNodes.add(currentNode);
-      console.log(Array.from(visitedNodes));
+      const slash = []
       // Добавляем не посещённых соседей в очередь
       Object.entries(graph[currentNode]).forEach(([key, el]) => {
         if (el === 1 && !visitedNodes.has(key)) {
-          queue.push(key);
+          queue.push(key)
+          slash.push(key)
         }
       });
+      way[currentNode] = slash
     }
   }
 
-  return Array.from(visitedNodes); // Возвращаем массив посещённых узлов
+  return way; // Возвращаем массив посещённых узлов
 };
 
 
 
 export function useDepthTraversal(adjacencies) {
   const [start, setStart] = useState(null)
+  const [node, setNode] = useState(null)
+
 
 
   useEffect(() => {
     if (start) {
-      dfs(adjacencies, start)
-
-      bfs(adjacencies, start)
+      console.log(bfs(adjacencies, start));
+      
+      setNode(dfs(adjacencies, start))
+      // bfs(adjacencies, start)
+      setStart(null)
     }
-    setStart(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start, adjacencies])
 
-  return (key) => { setStart(key) }
+  return [node, (key) => { setStart(key) }]
 
 
 }

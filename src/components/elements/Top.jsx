@@ -8,8 +8,7 @@ export function useCreateTops() {
       text: Object.keys(tops).join(', '),
       mass: Object.keys(tops),
       tops,
-      length: Object.keys(tops).length
-
+      length: Object.keys(tops).length,
     })
   }
 

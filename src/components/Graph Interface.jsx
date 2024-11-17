@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useKeyPress } from 'react-use'
 import Connection, { MarkerConnections, useCreateConnections } from "./elements/Connection";
 import Top, { useCreateTops } from "./elements/Top";
@@ -12,6 +12,17 @@ export function useCreateGraf(event) {
   const [tops, setTops] = useCreateTops()
   const [connections, setConnections] = useCreateConnections()
   const matrix = useGenerateMatrix({ tops, connections }, event)
+  const [degree, setDegree] = useState({})
+
+  useEffect(() => {
+    setDegree(degreeLocal => {
+      tops.mass.forEach(el => {
+        degreeLocal[el] = Object.values(matrix.adjacencies[el]).filter(el => el === 1).length
+      })
+      return degreeLocal
+    })
+
+  }, [matrix])
 
 
   function update(type, value) {
@@ -22,7 +33,12 @@ export function useCreateGraf(event) {
     }
   }
 
-  return [{ tops, connections, ...matrix }, update]
+  return [{ 
+    tops, 
+    connections, 
+    ...matrix,
+    degree
+  }, update]
 }
 
 
@@ -42,13 +58,15 @@ function useTargetConnections(obj, setObj) {
   const [connect, setConnect] = useState([])
   const [shiftTarget, setTarget] = useKeyPress('Shift')
   const [escTarget, setEscTarget] = useKeyPress('Escape')
+  const [ctrlTarget, setCtrlTarget] = useKeyPress('Control')
   useEffect(() => {
     if (connect.length === 2) {
       setObj(obj, connect)
-      if (shiftTarget) { setConnect([connect[1]]) }
+      if (shiftTarget && ctrlTarget) { setConnect([connect[0]]) }
+      else if (shiftTarget) { setConnect([connect[1]]) }
       else setConnect([])
-    }
-  }, [connect, obj, setObj, shiftTarget])
+    } 
+  }, [connect, obj, setObj, shiftTarget, ctrlTarget])
 
   useEffect(() => {
     escTarget && setConnect([])
@@ -73,7 +91,44 @@ function useTargetConnections(obj, setObj) {
 
 
 
+function useWalkWay(way) {
+  const [localWay, setLocalWay] = useState(way)
+  const [index, setIndex] = useState(0)
+  const [top, setTop] = useState(null)
+  const [visited, setVisited] = useState([])
 
+  useEffect(() => {
+    if (localWay) {
+      setTop(localWay[index])
+      setIndex(index + 1)
+      setVisited([...visited, localWay[index]])
+    }
+  }, [localWay])
+
+  useEffect(() => {
+    if (way) setLocalWay(way)
+  }, [way])
+
+  useEffect(() => {
+    if (localWay) {
+      setTimeout(() =>{
+        setTop(localWay[index])
+        !visited.includes(localWay[index]) && typeof localWay[index] !== 'undefined' && setVisited([...visited, localWay[index]])
+        if (index < localWay.length) {
+          setIndex(index + 1)
+        } else {
+          setTop(null)
+          setLocalWay(null)
+          setVisited([])
+          setIndex(0)
+        }
+      }, 1000)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localWay ,index])
+
+  return [top, visited]
+}
 
 
 
@@ -87,7 +142,6 @@ export default function GraphInterface({
   obj,
   setObj,
   setStartTraversal,
-  way = [],
   start
 }) {
   const [DragTop, setDragTop] = useState(null)
@@ -98,6 +152,8 @@ export default function GraphInterface({
     y: 0
   })
   const [connectionsOnTop, setConnectionsOnTop] = useState(null)
+
+  const [Check, visited] = useWalkWay(start)
 
   useEffect(() => {
     if (context) {
@@ -164,6 +220,8 @@ export default function GraphInterface({
   }
 
   function onMouseDragTop(e) {
+    
+    
 
     DragTop ? setObj(obj.tops, {
       ...obj.tops.tops,
@@ -214,6 +272,7 @@ export default function GraphInterface({
         className="graph-interface"
         onMouseDown={(e) => {
           setContext(null)
+          
           switch (event.toolType) {
             case EVENT.ADD_TOP: e.button === 0 && onCreateSvgTop(e); break
             default: break;
@@ -233,7 +292,7 @@ export default function GraphInterface({
           }
         }}
       >
-        {start && <Top radius={8} x={obj.tops.tops[start].x} y={obj.tops.tops[start].y} bgColor="green" className='travel'/>}
+        {Check && <Top radius={8} x={obj.tops.tops[Check].x} y={obj.tops.tops[Check].y} bgColor="green" className='travel'/>}
 
 
 
@@ -276,10 +335,10 @@ export default function GraphInterface({
                 y={top.y}
                 value={value}
                 radius={12}
-                bgColor={(DragTop === value || connect.includes(value)) || way.includes(value) ? 'green' : 'black'}
+                bgColor={(DragTop === value || connect.includes(value)) || visited.includes(value) ? 'green' : 'black'}
                 onMouseDown={(e) => {
                   switch (event.toolType) {
-                    case EVENT.CURSOR: e.button === 0 && !start && setDragTop(value); break
+                    case EVENT.CURSOR: e.button === 0 && !Check && setDragTop(value); break
                     case EVENT.ADD_TOP: e.button === 2 && setDragTop(value); break
                     default: break;
                   }
@@ -340,7 +399,7 @@ export default function GraphInterface({
         })
       ]} 
       obj={{
-        degree: Object.values(obj.adjacencies[context.value]).filter(el => el === 1).length,
+        degree: obj.degree[context.value],
       }}/>}
     </>
   );
